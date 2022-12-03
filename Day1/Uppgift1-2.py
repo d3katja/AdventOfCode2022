@@ -12,6 +12,7 @@
 # Calories carried by these three elves is 45000.
 
 # Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
+# Your puzzle answer was 200044.
 
 nisseCalories = []
 noOfCalories = 0
