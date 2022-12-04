@@ -47,81 +47,72 @@ scissorsPoint = 3
 losingPoint = 0
 drawPoint = 3
 winPoint = 6
-totalPoints = 0
 
-for line in open("Day2/input2.txt"):
-    gameRow = line.strip()
 
-    if gameRow:
-        gamePoint = 0
-        opponentMove = gameRow[0]
-        myMove = gameRow[2]
-        # print(gameRow)
-        # print(opponentMove)
-        # print(myMove)
+def Uppgift2_1():
+    totalPoints = 0
+    for line in open("Day2/input2.txt"):
+        gameRow = line.strip()
 
-        # It's a draw.
-        if (
-            opponentMove == "A"
-            and myMove == "X"
-            or opponentMove == "B"
-            and myMove == "Y"
-            or opponentMove == "C"
-            and myMove == "Z"
-        ):
-            # print("It's a draw.")
+        if gameRow:
+            gamePoint = 0
+            opponentMove = gameRow[0]
+            myMove = gameRow[2]
+            # print(gameRow)
+            # print(opponentMove)
+            # print(myMove)
 
-            gamePoint += drawPoint
-            match myMove:
-                case "X":
-                    gamePoint += rockPoint
-                case "Y":
-                    gamePoint += paperPoint
-                case "Z":
-                    gamePoint += scissorsPoint
+            # It's a draw.
+            if (
+                opponentMove == "A"
+                and myMove == "X"
+                or opponentMove == "B"
+                and myMove == "Y"
+                or opponentMove == "C"
+                and myMove == "Z"
+            ):
+                # print("It's a draw.")
+                gamePoint += drawPoint
 
+            # I won.
+            if (
+                opponentMove == "A"
+                and myMove == "Y"
+                or opponentMove == "B"
+                and myMove == "Z"
+                or opponentMove == "C"
+                and myMove == "X"
+            ):
+                # print("I won.")
+                gamePoint += winPoint
+
+            # The opponent won.
+            if (
+                opponentMove == "A"
+                and myMove == "Z"
+                or opponentMove == "B"
+                and myMove == "X"
+                or opponentMove == "C"
+                and myMove == "Y"
+            ):
+                # print("The opponent won.")
+                gamePoint += losingPoint
+
+            gamePoint += UpdateGamePointWithMyMove(myMove)
             totalPoints += gamePoint
 
-        # I won.
-        if (
-            opponentMove == "A"
-            and myMove == "Y"
-            or opponentMove == "B"
-            and myMove == "Z"
-            or opponentMove == "C"
-            and myMove == "X"
-        ):
-            # print("I won.")
-            gamePoint += winPoint
-            match myMove:
-                case "X":
-                    gamePoint += rockPoint
-                case "Y":
-                    gamePoint += paperPoint
-                case "Z":
-                    gamePoint += scissorsPoint
+    return totalPoints
 
-            totalPoints += gamePoint
 
-        # The opponent won.
-        if (
-            opponentMove == "A"
-            and myMove == "Z"
-            or opponentMove == "B"
-            and myMove == "X"
-            or opponentMove == "C"
-            and myMove == "Y"
-        ):
-            # print("The opponent won.")
-            gamePoint += losingPoint
-            match myMove:
-                case "X":
-                    gamePoint += rockPoint
-                case "Y":
-                    gamePoint += paperPoint
-                case "Z":
-                    gamePoint += scissorsPoint
+def UpdateGamePointWithMyMove(myMove):
+    match myMove:
+        case "X":
+            return rockPoint
+        case "Y":
+            return paperPoint
+        case "Z":
+            return scissorsPoint
 
-            totalPoints += gamePoint
 
-print(totalPoints)
+result = Uppgift2_1()
+print(result)
