@@ -64,25 +64,70 @@
 # After the rearrangement procedure completes, what crate ends up on top of each stack?
 
 # To begin, get your puzzle input.
+# Your puzzle answer was TWSGQHNHL.
+
+crateStacks = []
+crateMoves = []
+numberOfIndeces = 0
+
 
 def Uppgift():
-    crateStacks = [[]]
-    for line in open("Day5/inputTest.txt"):
-        row = line.strip()
+
+    for line in open("Day5/input5.txt"):
+        row = line
         rightParenthesis = False
 
-        if row[0]==' ' or row[0]=='[':
-            # this is the crate stack picture
-            crateStack = []
-            for i in range(9):
-                crate = row[i * 4 + 1]
-                if crate.isalpha():
-                    crateStack.append(crate)
+        crateStack = []
 
-                crateStacks.Append(crateStack)
-        else:
-            if row[1]=='m':
+        crateIndeces = []  # [1, 5, 9, 13, 17, 21, 25, 29, 33]
+        if row[0] == " " or row[0] == "[":
+            length = len(row)
+            numberOfIndeces = int(length / 4)
+
+            for i in range(numberOfIndeces):
+                if not crateIndeces or len(crateIndeces) < numberOfIndeces:
+                    crateIndeces.append(i * 4 + 1)
+                if not crateStacks or len(crateStacks) < numberOfIndeces:
+                    crateStacks.append([])
+                    print("crateIndeces: " + str(crateIndeces))
+
+            j = 0
+            for i in crateIndeces:
+                crate = row[i]
+                if crate.isalpha():
+                    crateStacks[j].insert(0, crate)
+
+                j += 1
+
+        elif row[0] == "m":
             # this is a moving line
+            HandleMoveLine(row)
+
+    print("Uppgift crateStacks: " + str(crateStacks))
+    print("Uppgift crateMoves: " + str(crateMoves))
+    MoveCrates()
+
 
 def HandleMoveLine(row):
-    for character
+    moves = (
+        row.replace("move", "").replace("from", "").replace("to", "").strip().split(" ")
+    )
+    moveList = [moves[0], moves[2], moves[4]]
+    crateMoves.append(moveList)
+
+
+def MoveCrates():
+    for move in crateMoves:
+        noOfCratesToMove = int(move[0])
+        stackToMoveFrom = int(move[1]) - 1
+        stackToMoveTo = int(move[2]) - 1
+        print(move)
+        print("MoveCrates crateStacks before move: " + str(crateStacks))
+        for i in range(noOfCratesToMove):
+            crate = crateStacks[stackToMoveFrom].pop()
+            crateStacks[stackToMoveTo].append(crate)
+        print("MoveCrates crateStacks after move: " + str(crateStacks))
+
+
+Uppgift()
+print("Result: " + "".join([s[-1] for s in crateStacks]))
