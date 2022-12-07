@@ -86,35 +86,69 @@
 # 1. Build up a view of the file system by parsing the file.
 # 2. Loop through all dirs and calculate the total size and save in a dictionary (path, size)
 
+# Your puzzle answer was 1454188.
 
-def Uppgift():
+import re
 
-    file = open("Day7/inputTest.txt")
-    row = file.readline().strip()
-    parentDir = ""
-    filesAndDirs = []
+filesAndDirs = {}
 
-    if row == "$ ls":
-        # Read lines until you find the next "ls".
-        nextLine = ""
-        totalSize = 0
-        path = parentDir
-        while nextLine != "$ ls":
-            nextLine = file.readline().strip()
-            if nextLine[0] != "$":
-                # This is either "14848514 b.txt" or "dir d"
-                if nextLine[0, 4] != "dir ":
-                    words = nextLine.split(" ")
-                    totalSize += words[0]
-                    path = path + "-" + words[2]
-                    print("Path: " + path)
-                    print("totalSize: " + str(totalSize))
-                    filesAndDirs.append(
-                        {"Path": path, "Size": words[0], "Type": "file"}
-                    )
-                else:
-                    words = nextLine.split(" ")
-                    path = path + "-" + words[2]
-                    filesAndDirs.append(
-                        {"Path": path, "Size": totalSize, "Type": "dir"}
-                    )
+
+def MapUpFileSystem():
+
+    currentPath = []
+    currentDirectory = ""
+
+    regexCd = re.compile(r"\$ cd (\S+)")
+    regexLs = re.compile(r"\$ ls")
+    regexDir = re.compile(r"dir (\S+)")
+    regexFile = re.compile(r"(\d+) \S+")
+
+    for line in open("Day7/input7.txt"):
+
+        row = line.strip()
+        print(row)
+
+        if hit := regexCd.fullmatch(row):
+            dirName = hit.group(1)
+
+            match dirName:
+                case "/":
+                    currentPath = [""]
+                    # currentDirectory = "/"
+                case "..":
+                    currentPath.pop()
+                    # currentDirectory = "/".join(currentPath)
+                case other:
+                    currentPath.append(dirName)
+                    # currentDirectory = "/".join(currentPath)
+
+        elif hit := regexLs.fullmatch(row):
+            # Do nothing.
+            pass
+
+        elif hit := regexDir.fullmatch(row):
+            pass
+
+        elif hit := regexFile.fullmatch(row):
+            for i in range(len(currentPath)):
+
+                currentDirectory = "/".join(currentPath[: i + 1])
+
+                filesAndDirs[currentDirectory] = filesAndDirs.get(
+                    currentDirectory, 0
+                ) + int(hit.group(1))
+                print(currentPath)
+                print(currentDirectory)
+                print(filesAndDirs)
+
+    print(filesAndDirs)
+
+
+def SumAllDirectorySizesSmallerThan():
+    maxDirectorySize = 100000
+
+    print(sum([v for v in filesAndDirs.values() if v <= maxDirectorySize]))
+
+
+MapUpFileSystem()
+SumAllDirectorySizesSmallerThan()
