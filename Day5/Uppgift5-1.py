@@ -75,9 +75,6 @@ def Uppgift():
 
     for line in open("Day5/input5.txt"):
         row = line
-        rightParenthesis = False
-
-        crateStack = []
 
         crateIndeces = []  # [1, 5, 9, 13, 17, 21, 25, 29, 33]
         if row[0] == " " or row[0] == "[":
