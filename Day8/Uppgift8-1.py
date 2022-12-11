@@ -34,47 +34,47 @@
 
 # Consider your map; how many trees are visible from outside the grid?
 
-input = open("Day8/inputTest8.txt").read()
+# Your puzzle answer was 1703.
+
+input = open("Day8/input8.txt").read()
 allRows = input.split("\n")
-allRowsTest = allRows.pop()
 rowLength = len(allRows[0])
-noOfRows = len(allRows)
+noOfRows = len(allRows) - 1
 lastRowIndex = int(len(input) / rowLength) - 1
 print("Number of rows in file: " + str(noOfRows))
 print("Number of columns per row: " + str(rowLength))
 
 
 def Uppgift():
-    totalNumberOfVisibleTrees = 2 * rowLength + 2 * (noOfRows - 2)
+    totalNumberOfVisibleTrees = 0
     print("totalNumberOfVisibleTrees from the start: " + str(totalNumberOfVisibleTrees))
     foundTreePositions = []
 
-    for rowIndex in range(1, lastRowIndex - 1):
+    for rowIndex in range(0, lastRowIndex):
         currentRow = allRows[rowIndex]
         print("currentRow: " + currentRow)
         numberOfVisibleTrees = 0
-        highestTreeFromLeft = int(allRows[rowIndex][0])
-        highestTreeFromLeftPosition = (rowIndex, int(0))
-        highestTreeFromRight = int(allRows[0][rowLength - 1])
-        highestTreeFromRightPosition = (rowIndex, int(rowLength - 1))
+        highestTreeFromLeft = -1
 
-        for colIndex in range(1, rowLength - 2):
-            currentPos = int(allRows[rowIndex][colIndex])
-            previousPos = int(allRows[rowIndex][colIndex - 1])
-            if currentPos > previousPos and currentPos > highestTreeFromLeft:
-                highestTreeFromLeft = currentPos
+        for colIndex in range(rowLength):
+            currentHeight = int(allRows[rowIndex][colIndex])
+            previousHeight = -1
+            if currentHeight > previousHeight and currentHeight > highestTreeFromLeft:
+                highestTreeFromLeft = currentHeight
                 highestTreeFromLeftPosition = (rowIndex, colIndex)
                 print(
                     "highestTreeFromLeftPosition: " + str(highestTreeFromLeftPosition)
                 )
-                numberOfVisibleTrees += 1
-                foundTreePositions.append(highestTreeFromLeftPosition)
+                if not highestTreeFromLeftPosition in foundTreePositions:
+                    numberOfVisibleTrees += 1
+                    foundTreePositions.append(highestTreeFromLeftPosition)
 
-        for colIndex in range(rowLength - 2, 1, -1):
-            currentPos = int(allRows[rowIndex][colIndex])
-            previousPos = int(allRows[rowIndex][colIndex + 1])
-            if currentPos > previousPos and currentPos > highestTreeFromRight:
-                highestTreeFromRight = currentPos
+        highestTreeFromRight = -1
+        for colIndex in reversed(range(rowLength)):
+            currentHeight = int(allRows[rowIndex][colIndex])
+            previousHeight = -1
+            if currentHeight > previousHeight and currentHeight > highestTreeFromRight:
+                highestTreeFromRight = currentHeight
                 highestTreeFromRightPosition = (rowIndex, colIndex)
                 print(
                     "highestTreeFromRightPosition: " + str(highestTreeFromRightPosition)
@@ -87,30 +87,25 @@ def Uppgift():
         totalNumberOfVisibleTrees += numberOfVisibleTrees
         print("totalNumberOfVisibleTrees: " + str(totalNumberOfVisibleTrees))
 
-    # TODO: Check that the found positions are not already found.
-    for colIndex in range(1, rowLength - 1):
+    for colIndex in range(rowLength):
         numberOfVisibleTrees = 0
-        highestTreeFromTop = int(allRows[0][colIndex])
-        highestTreeFromTopPosition = (int(0), colIndex)
-        highestTreeFromBottom = int(allRows[lastRowIndex - 1][colIndex])
-        highestTreeFromBottomPosition = (int(lastRowIndex - 1), colIndex)
 
-        for rowIndex in range(1, lastRowIndex - 1):
-            currentPos = int(allRows[rowIndex][colIndex])
-            previousPos = int(allRows[rowIndex - 1][colIndex])
-            if currentPos > previousPos and currentPos > highestTreeFromRight:
-                highestTreeFromTop = currentPos
+        highestTreeFromTop = -1
+        for rowIndex in range(0, lastRowIndex):
+            currentHeight = int(allRows[rowIndex][colIndex])
+            if currentHeight > highestTreeFromTop:
+                highestTreeFromTop = currentHeight
                 highestTreeFromTopPosition = (rowIndex, colIndex)
                 print("highestTreeFromTopPosition: " + str(highestTreeFromTopPosition))
                 if not highestTreeFromTopPosition in foundTreePositions:
                     numberOfVisibleTrees += 1
                     foundTreePositions.append(highestTreeFromTopPosition)
 
-        for rowIndex in range(lastRowIndex - 1, 1, -1):
-            currentPos = int(allRows[rowIndex][colIndex])
-            previousPos = int(allRows[rowIndex + 1][colIndex])
-            if currentPos > previousPos and currentPos > highestTreeFromRight:
-                highestTreeFromBottom = currentPos
+        highestTreeFromBottom = -1
+        for rowIndex in reversed(range(lastRowIndex)):
+            currentHeight = int(allRows[rowIndex][colIndex])
+            if currentHeight > highestTreeFromBottom:
+                highestTreeFromBottom = currentHeight
                 highestTreeFromBottomPosition = (rowIndex, colIndex)
                 print(
                     "highestTreeFromBottomPosition: "
